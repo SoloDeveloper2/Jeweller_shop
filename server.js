@@ -76,3 +76,7 @@ app.patch('/api/admin/orders/:id', wrap(async (q, res) => {
 }));
 
 app.listen(process.env.PORT || 3000, () => console.log('Rayzex.Zone running at http://localhost:3000'));
+if (require.main === module) {
+  app.listen(process.env.PORT || 3000, () => console.log('Running'));
+}
+module.exports = app;
