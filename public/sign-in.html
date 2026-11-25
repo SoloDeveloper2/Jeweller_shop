@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <title>Sign in | Rayzex.Zone</title>
+</head>
+
+<body>
+    <main style="display:grid;place-items:center">
+        <div id="a"></div>
+    </main>
+    <script src="/app.js"></script>
+    <script>
+        const q = new URLSearchParams(location.search), n = q.get('next') || '', next = /^\/[^\/]/.test(n) ? n : '/', e = encodeURIComponent(next);
+        ready.then(() => {
+            if (Clerk.user) return location.href = next;
+            q.get('mode') == 'up' ? Clerk.mountSignUp($('#a'), { signInUrl: '/sign-in.html?next=' + e, fallbackRedirectUrl: next, afterSignUpUrl: next }) : Clerk.mountSignIn($('#a'), { signUpUrl: '/sign-in.html?mode=up&next=' + e, fallbackRedirectUrl: next, afterSignInUrl: next })
+        }).catch(x => { $('#a').textContent = 'Sign-in could not load: ' + x.message });
+    </script>
+</body>
+
+</html>

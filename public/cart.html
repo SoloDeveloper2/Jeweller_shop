@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"><title>Cart | Rayzex.Zone</title></head><body><main><h1>Your cart</h1><div id="list"></div><div id="sum"></div></main><script src="/app.js"></script><script>
+async function show(){const c=await api('/cart'),sub=c.reduce((s,i)=>s+i.price*i.qty,0),ship=sub&&sub<599?60:0;
+$('#list').innerHTML=c.map(i=>`<div class="panel row"><span>${i.emoji} ${esc(i.name)}</span><span class="q"><button onclick="chg(${i.productId},${i.qty-1})" aria-label="Remove one">−</button> ${i.qty} <button onclick="chg(${i.productId},${i.qty+1})" aria-label="Add one">+</button></span><b>${inr(i.price*i.qty)}</b></div>`).join('')||'<p>Your cart is empty. <a href="/shop.html">Browse the shop</a></p>';
+$('#sum').innerHTML=sub?`<div class="row"><span>Shipping</span><span>${ship?inr(ship):'Free'}</span></div><div class="row"><b>Total</b><b>${inr(sub+ship)}</b></div>${ship?`<p class="mut">Add ${inr(599-sub)} more for free shipping.</p>`:''}<a class="btn" href="/checkout.html">Continue to address</a>`:'';refreshCart()}
+const chg=(id,q)=>api('/cart/'+id,{method:'PUT',body:{qty:q}}).then(show).catch(e=>toast(e.message));
+authed().then(show);
+</script></body></html>

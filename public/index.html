@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="/style.css"><title>Rayzex.Zone: Korean jewellery and accessories</title></head><body>
+<div class="bar">Black Friday sale is live. Free shipping above ₹599, free gift above ₹699, cash on delivery available.</div>
+<header class="hero"><canvas id="c" aria-hidden="true"></canvas><div><h1>Wear<br>the Zone</h1><p>Trendy Korean jewellery, priced for everyday and made for your feed.</p><a href="/shop.html"><button class="btn">Shop the collection</button></a></div></header>
+<section><h2>Hot selling right now</h2><div class="grid" id="grid"></div></section>
+<section id="fb"><h2>Tell us what you think</h2><form class="fb" id="ff"><input name="name" placeholder="Your name" required><input name="email" type="email" placeholder="Email" required><textarea name="message" rows="4" placeholder="Your feedback" required></textarea><button class="btn">Send feedback</button></form></section>
+<footer>© 2026 Rayzex.Zone. Easy 7-day returns. Delivery in 5 to 9 business days.</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script><script src="/app.js"></script>
+<script>
+const W3F_KEY='1ca6ad89-0f8d-4d1f-8528-40fbcfc0b112';
+// 3D hero: gold ring, ruby gem, drifting shards, camera follows the cursor
+const cv=$('#c'),R=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true}),S=new THREE.Scene(),C=new THREE.PerspectiveCamera(50,1,.1,100);C.position.z=7;
+S.add(new THREE.AmbientLight(0xffffff,.5));[[0xf2707f,2,5,5,6],[0xf5d28a,1.5,-5,-3,4]].forEach(([c,i,x,y,z])=>{const l=new THREE.PointLight(c,i,50);l.position.set(x,y,z);S.add(l)});
+const ring=new THREE.Mesh(new THREE.TorusGeometry(1.6,.28,32,100),new THREE.MeshStandardMaterial({color:0xf5d28a,metalness:1,roughness:.2}));S.add(ring);
+const gm=new THREE.MeshStandardMaterial({color:0xf2707f,metalness:.6,roughness:.05,flatShading:true}),gem=new THREE.Mesh(new THREE.OctahedronGeometry(.6),gm);gem.position.y=1.9;S.add(gem);
+const sh=[...Array(24)].map(()=>{const m=new THREE.Mesh(new THREE.OctahedronGeometry(.1+Math.random()*.15),gm);m.position.set((Math.random()-.5)*14,(Math.random()-.5)*8,(Math.random()-.5)*6-1);S.add(m);return m});
+const fit=()=>{const w=cv.clientWidth,h=cv.clientHeight;R.setSize(w,h,false);C.aspect=w/h;C.updateProjectionMatrix()};fit();addEventListener('resize',fit);
+let mx=0,my=0;addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+(function loop(t){requestAnimationFrame(loop);if(!rm){ring.rotation.x+=.006;ring.rotation.y+=.008;gem.rotation.y+=.02;sh.forEach((m,i)=>{m.rotation.x+=.01;m.position.y+=Math.sin(t/1000+i)*.002});C.position.x+=(mx*2-C.position.x)*.05;C.position.y+=(-my*2-C.position.y)*.05}C.lookAt(0,0,0);R.render(S,C)})(0);
+// GSAP: one intro sequence, ring shrinks away as you scroll past the hero
+if(!rm){gsap.from('.hero h1',{y:90,opacity:0,duration:1.2,ease:'power4.out'});gsap.from('.hero p,.hero .btn',{y:30,opacity:0,delay:.5,stagger:.2});
+addEventListener('scroll',()=>{const k=Math.max(.35,1-scrollY/(innerHeight*.9));gsap.to(ring.scale,{x:k,y:k,z:k,duration:.3,overwrite:true})},{passive:true})}
+pub('/products').then(p=>{$('#grid').innerHTML=p.filter(x=>x.hot).slice(0,8).map(card).join('');reveal()});
+$('#ff').onsubmit=async e=>{e.preventDefault();const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({...Object.fromEntries(new FormData(e.target)),access_key:W3F_KEY,subject:'Rayzex.Zone feedback'})});
+const d=await r.json();toast(d.success?'Thanks, your feedback was sent':'Feedback not sent. Check your Web3Forms key.');if(d.success)e.target.reset()};
+</script></body></html>
