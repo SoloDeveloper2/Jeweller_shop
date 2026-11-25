@@ -1,4 +1,6 @@
 import express from 'express';
+import { dirname, join } from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import { and, desc, eq, gte, inArray, sql } from 'drizzle-orm';
 import { clerkMiddleware, getAuth, clerkClient } from '@clerk/express';
 import { db } from './db/index.js';
@@ -8,7 +10,7 @@ import './db/seed.js';
 const ADMINS = (process.env.ADMIN_EMAILS || '').toLowerCase().split(',').map((s) => s.trim()).filter(Boolean);
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(join(dirname(fileURLToPath(import.meta.url)), 'public')));
 app.use('/api', clerkMiddleware());
 
 const fail = (status, message) => Object.assign(new Error(message), { status });
@@ -75,8 +77,8 @@ app.patch('/api/admin/orders/:id', wrap(async (q, res) => {
   res.json({ ok: true });
 }));
 
-app.listen(process.env.PORT || 3000, () => console.log('Rayzex.Zone running at http://localhost:3000'));
-if (require.main === module) {
-  app.listen(process.env.PORT || 3000, () => console.log('Running'));
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  app.listen(process.env.PORT || 3000, () => console.log('Rayzex.Zone running at http://localhost:3000'));
 }
-module.exports = app;
+
+export default app;
