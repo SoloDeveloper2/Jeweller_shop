@@ -35,8 +35,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="/app.js"></script>
     <script>
-        const path = require('path');
-        app.use(express.static(path.join(__dirname, 'public')));
         const W3F_KEY = '1ca6ad89-0f8d-4d1f-8528-40fbcfc0b112';
         // 3D hero: gold ring, ruby gem, drifting shards, camera follows the cursor
         const cv = $('#c'), R = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: true }), S = new THREE.Scene(), C = new THREE.PerspectiveCamera(50, 1, .1, 100); C.position.z = 7;
